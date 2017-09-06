@@ -5,7 +5,7 @@ module.exports = {
 	entry:[
 		'webpack-dev-server/client?http://localhost:3000',
 		'webpack/hot/only-dev-server',
-		'react-hot-loader/path',
+		'react-hot-loader/patch',
 		path.join(__dirname, 'app/index.js')
 	],
 	output: {
@@ -15,9 +15,9 @@ module.exports = {
 	},
 	plugins: [
 		new htmlWebpackPlugin({
-			template: __dirname + 'index.tpl.html',
+			template:'./index.tpl.html',
 			inject: 'body',
-			filename: __dirname + 'index.html'
+			filename: './index.html'
 		}),
 		new webpack.optimize.OccurrenceOrderPlugin(),
 		new webpack.HotModuleReplacementPlugin(),
@@ -25,7 +25,7 @@ module.exports = {
 		new webpack.DefinePlugin({
 			'process.env.NODE_ENV': JSON.stringify('developement')
 		})
-	]
+	],
 	module: {
 		loaders: [{
 			test: /\.js$/,
