@@ -15,17 +15,22 @@ let Root = React.createClass({
 			ready: function(e) {
 				$(this).jPlayer('setMedia',{
 					mp3: chengdu
-				}).jPlayer('stop');
+				}).jPlayer('play');
 			},
 			supplied: 'mp3',
 			wmode: 'window'
 		});
-		$('#player').on($.jPlayer.event.timeupdate,function(e) {
-			self.setState({
-				progress: Math.round(e.jPlayer.status.currentTime)
+		$('#player').on($.jPlayer.event.timeupdate,(e) => {
+			//Math.round(e.jPlayer.status.currentTime);
+			this.setState({
+				progress: (e.jPlayer.status.currentPercentAbsolute)
 			})
 		})
 
+	},
+	componentWillUnMount() {
+		//解绑
+		$('#player').off($.jPlayer.event.timeupdate);
 	},
 	render() {
 		return (
