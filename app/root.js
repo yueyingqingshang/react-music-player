@@ -13,7 +13,7 @@ let Root = React.createClass({
 			ready: function(e) {
 				$(this).jPlayer('setMedia',{
 					mp3: chengdu
-				}).jPlayer('stop');
+				}).jPlayer('play');
 			},
 			supplied: 'mp3',
 			wmode: 'window'
