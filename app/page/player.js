@@ -7,7 +7,9 @@ let duration = null;
 let Player = React.createClass({
 	getInitialState() {
 		return {
-			progress: '-'
+			progress: 0,
+			volume: 0,
+			isPlay: true
 		};
 	},
 	componentDidMount() {
@@ -15,18 +17,31 @@ let Player = React.createClass({
 			//Math.round(e.jPlayer.status.currentTime);
 			duration = e.jPlayer.status.duration;
 			this.setState({
+				volume: (e.jPlayer.options.volume * 100),
 				progress: (e.jPlayer.status.currentPercentAbsolute)
 			})
 		})
 
 	},
+	
+	componentWillUnMount() {
+		//解绑
+		$('#player').off($.jPlayer.event.timeupdate);
+	},
 	progressChangeHandler(progress) {
 		console.log('form player widget',progress);
 		$('#player').jPlayer('play',duration * progress);
 	},
-	componentWillUnMount() {
-		//解绑
-		$('#player').off($.jPlayer.event.timeupdate);
+	changeVolumeHandler(progress) {
+		//console.log(progress);
+		$('#player').jPlayer('volume',progress);
+	},
+	playMusic(isPlay) {
+		var play = this.state.isPlay ? 'pause':'play';
+		$('#player').jPlayer(play);
+		this.setState({
+			isPlay: !this.state.isPlay
+		});
 	},
 	render() {
 		return (
@@ -35,25 +50,22 @@ let Player = React.createClass({
                 <h1 className="caption">我的私人音乐坊 &gt;</h1>
                 <div className="mt20 row">
                 	<div className="controll-wrapper">
-                		<h2 className="music-title">歌曲名称</h2>
-                		<h3 className="music-artist mt10">歌手</h3>
+                		<h2 className="music-title">{this.props.currentMusicItem.title}</h2>
+                		<h3 className="music-artist mt10">{this.props.currentMusicItem.artist}</h3>
                 		<div className="row mt20">
                 			<div className="left-time -col-auto">-2:00</div>
                 			<div className="volume-container">
                 				<i className="icon-volume rt" style={{top: 5, left: -5}}></i>
                 				<div className="volume-wrapper">
-                					音量控制部分
 					                <Progress
-										progress={this.state.progress}
-										onProgressChange={this.progressChangeHandler}
-										barColor='#aaa'
+										progress={this.state.volume}
+										onProgressChange={this.changeVolumeHandler}
 					                >
 					                </Progress>
                 				</div>
                 			</div>
                 		</div>
                 		<div style={{height: 10, lineHeight: '10px'}}>
-                			播放进度部分
 			                <Progress
 								progress={this.state.progress}
 								onProgressChange={this.progressChangeHandler}
@@ -63,16 +75,16 @@ let Player = React.createClass({
                 		<div className="mt35 row">
                 			<div>
 	                			<i className="icon prev"></i>
-	                			<i className={`icon ml20 ${this.state.isPlay ? 'pause' : 'play'}`} onClick={this.play}></i>
+	                			<i className={`icon ml20 ${this.state.isPlay ? 'pause' : 'play'}`} onClick={this.playMusic}></i>
 	                			<i className="icon next ml20"></i>
                 			</div>
                 			<div className="-col-auto">
-                				<i className={`icon repeat-${this.props.repeatType}`} onClick={this.changeRepeat}></i>
+                				<i className="icon repeat-cycle" onClick={this.changeRepeat}></i>
                 			</div>
                 		</div>
                 	</div>
                 	<div className="-col-auto cover">
-                		<img src="" alt="歌曲名称"/>
+                		<img src={this.props.currentMusicItem.cover} alt={this.props.currentMusicItem.title}/>
                 	</div>
                 </div>
             </div>
