@@ -6,17 +6,16 @@ import { MUSIC_LIST } from './config/musicList';
 var chengdu = require('../static/music/chengdu.mp3');
 let Root = React.createClass({
 	getInitialState() {
-		console.log(MUSIC_LIST);
 		return {
 			currentMusicItem: MUSIC_LIST[0]
 		};
 	},
 	componentDidMount() {
-		console.log(MUSIC_LIST);
+		var self = this;
 		$('#player').jPlayer({
 			ready: function(e) {
 				$(this).jPlayer('setMedia',{
-					mp3: chengdu
+					mp3: self.state.currentMusicItem.file
 				}).jPlayer('play');
 			},
 			supplied: 'mp3',
