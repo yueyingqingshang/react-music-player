@@ -29,11 +29,10 @@ let Player = React.createClass({
 		$('#player').off($.jPlayer.event.timeupdate);
 	},
 	progressChangeHandler(progress) {
-		console.log('form player widget',progress);
-		$('#player').jPlayer('play',duration * progress);
+		var play = this.state.isPlay ? 'play':'pause';
+		$('#player').jPlayer(play,duration * progress);
 	},
 	changeVolumeHandler(progress) {
-		//console.log(progress);
 		$('#player').jPlayer('volume',progress);
 	},
 	playMusic(isPlay) {
@@ -45,8 +44,7 @@ let Player = React.createClass({
 	},
 	render() {
 		return (
-			<div>
-				<div className="player-page">
+			<div className="player-page">
                 <h1 className="caption">我的私人音乐坊 &gt;</h1>
                 <div className="mt20 row">
                 	<div className="controll-wrapper">
@@ -87,8 +85,7 @@ let Player = React.createClass({
                 		<img src={this.props.currentMusicItem.cover} alt={this.props.currentMusicItem.title}/>
                 	</div>
                 </div>
-            </div>
-			</div>	
+        	</div>
 		);
 	}
 });
