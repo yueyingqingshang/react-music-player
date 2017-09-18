@@ -19,21 +19,27 @@ let Player = React.createClass({
 			this.setState({
 				volume: (e.jPlayer.options.volume * 100),
 				progress: (e.jPlayer.status.currentPercentAbsolute)
-			})
+			});
+			
 		})
 
 	},
 	
-	componentWillUnMount() {
+	componentWillUnmount() {
 		//解绑
 		$('#player').off($.jPlayer.event.timeupdate);
+		duration = null;
 	},
 	progressChangeHandler(progress) {
 		var play = this.state.isPlay ? 'play':'pause';
 		$('#player').jPlayer(play,duration * progress);
 	},
 	changeVolumeHandler(progress) {
+		console.log('this is player progress',progress);
 		$('#player').jPlayer('volume',progress);
+		this.setState({
+			volume: progress * 100
+		});
 	},
 	playMusic(isPlay) {
 		var play = this.state.isPlay ? 'pause':'play';

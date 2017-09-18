@@ -1,13 +1,15 @@
 import React from 'react';
 import Header from './components/header';
 import Player from './page/player';
+import Musiclist from './page/musiclist';
 import { MUSIC_LIST } from './config/musicList';
 //音乐文件
 var chengdu = require('../static/music/chengdu.mp3');
 let Root = React.createClass({
 	getInitialState() {
 		return {
-			currentMusicItem: MUSIC_LIST[0]
+			musicList: MUSIC_LIST,
+			currentMusicItem: MUSIC_LIST[1]
 		};
 	},
 	componentDidMount() {
@@ -16,7 +18,7 @@ let Root = React.createClass({
 			ready: function(e) {
 				$(this).jPlayer('setMedia',{
 					mp3: self.state.currentMusicItem.file
-				}).jPlayer('play');
+				}).jPlayer('stop');
 			},
 			supplied: 'mp3',
 			wmode: 'window'
@@ -28,9 +30,11 @@ let Root = React.createClass({
 		return (
 			<div>
 				<Header />
-				<Player
-					currentMusicItem = {this.state.currentMusicItem}
-				></Player>
+				
+				<Musiclist
+					currentMusicItem={this.state.currentMusicItem}
+					musicList = {this.state.musicList}
+				></Musiclist>
 			</div>	
 		);
 	}

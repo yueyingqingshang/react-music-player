@@ -10,7 +10,7 @@ let Progress = React.createClass({
 	changeProgress (e) {
 		let progressBar = this.refs.progressBar;
 		let progress = (e.clientX - progressBar.getBoundingClientRect().left) / progressBar.clientWidth;
-		//console.log(progress);
+		//console.log('from progress weiget',progress);
 		this.props.onProgressChange && this.props.onProgressChange(progress);
 	},
 	render() {
