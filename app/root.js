@@ -2,10 +2,10 @@ import React from 'react';
 import Header from './components/header';
 import Player from './page/player';
 import Musiclist from './page/musiclist';
-import { MUSIC_LIST } from './config/musicList';
+import {MUSIC_LIST} from './config/musicList';
+import {Router,IndexRoute,Link,Route,hashHistory} from 'react-router'
 //音乐文件
-var chengdu = require('../static/music/chengdu.mp3');
-let Root = React.createClass({
+let App = React.createClass({
 	getInitialState() {
 		return {
 			musicList: MUSIC_LIST,
@@ -18,7 +18,7 @@ let Root = React.createClass({
 			ready: function(e) {
 				$(this).jPlayer('setMedia',{
 					mp3: self.state.currentMusicItem.file
-				}).jPlayer('stop');
+				}).jPlayer('play');
 			},
 			supplied: 'mp3',
 			wmode: 'window'
@@ -30,12 +30,21 @@ let Root = React.createClass({
 		return (
 			<div>
 				<Header />
-				
-				<Musiclist
-					currentMusicItem={this.state.currentMusicItem}
-					musicList = {this.state.musicList}
-				></Musiclist>
+				{React.cloneElement(this.props.children,this.state)}
 			</div>	
+				
+		);
+	}
+});
+let Root = React.createClass({
+	render() {
+		return (
+			<Router history={hashHistory}>
+				<Route path="/" component={App}>
+					<IndexRoute component={Player}></IndexRoute>
+					<Route path="/list" component={Musiclist}></Route>
+				</Route>
+			</Router>
 		);
 	}
 });
