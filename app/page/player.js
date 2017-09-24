@@ -1,7 +1,8 @@
 import React from 'react';
 import Progress from '../components/progress';
-import './player.less';
 import { Link } from 'react-router';
+import Pubsub from 'pubsub-js';
+import './player.less';
 //音频文件播放进度
 let duration = null;
 let Player = React.createClass({
@@ -12,6 +13,9 @@ let Player = React.createClass({
 			isPlay: true
 		};
 	},
+	playMusicOther(type) {
+		Pubsub.publish('PLAY_MUSIC_OTHER',type);
+	},
 	componentDidMount() {
 		$('#player').on($.jPlayer.event.timeupdate,(e)=> {
 			//Math.round(e.jPlayer.status.currentTime);
@@ -20,9 +24,7 @@ let Player = React.createClass({
 				volume: (e.jPlayer.options.volume * 100),
 				progress: (e.jPlayer.status.currentPercentAbsolute)
 			});
-			
 		})
-
 	},
 	
 	componentWillUnmount() {
@@ -35,7 +37,6 @@ let Player = React.createClass({
 		$('#player').jPlayer(play,duration * progress);
 	},
 	changeVolumeHandler(progress) {
-		console.log('this is player progress',progress);
 		$('#player').jPlayer('volume',progress);
 		this.setState({
 			volume: progress * 100
@@ -51,7 +52,7 @@ let Player = React.createClass({
 	render() {
 		return (
 			<div className="player-page">
-                <h1 className="caption">我的私人音乐坊 &gt;</h1>
+                <Link to="/list"><h1 className="caption">我的私人音乐坊 &gt;</h1></Link>
                 <div className="mt20 row">
                 	<div className="controll-wrapper">
                 		<h2 className="music-title">{this.props.currentMusicItem.title}</h2>
@@ -78,9 +79,11 @@ let Player = React.createClass({
                 		</div>
                 		<div className="mt35 row">
                 			<div>
-	                			<i className="icon prev"></i>
-	                			<i className={`icon ml20 ${this.state.isPlay ? 'pause' : 'play'}`} onClick={this.playMusic}></i>
-	                			<i className="icon next ml20"></i>
+	                			<i className="icon prev" title="上一曲" onClick={this.playMusicOther.bind(this,'prev')}></i>
+	                			<i title={`${this.state.isPlay ? '暂停' : '播放' }`} 
+	                			className={`icon ml20 ${this.state.isPlay ? 'pause' : 'play'}`} 
+	                			onClick={this.playMusic}></i>
+	                			<i className="icon next ml20" title="下一曲" onClick={this.playMusicOther.bind(this,'next')}></i>
                 			</div>
                 			<div className="-col-auto">
                 				<i className="icon repeat-cycle" onClick={this.changeRepeat}></i>
