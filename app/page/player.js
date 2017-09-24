@@ -10,19 +10,29 @@ let Player = React.createClass({
 		return {
 			progress: 0,
 			volume: 0,
-			isPlay: true
+			isPlay: true,
+			leftTime: ''
 		};
 	},
 	playMusicOther(type) {
 		Pubsub.publish('PLAY_MUSIC_OTHER',type);
 	},
+	//格式化时间
+	formatTime(time) {
+		time = Math.floor(time);
+		let min = Math.floor(time / 60);
+		let sec = Math.floor(time % 60);
+		sec = sec < 10 ? `0${sec}` : sec;
+		return `${min}:${sec}`;
+
+	},
 	componentDidMount() {
 		$('#player').on($.jPlayer.event.timeupdate,(e)=> {
-			//Math.round(e.jPlayer.status.currentTime);
 			duration = e.jPlayer.status.duration;
 			this.setState({
 				volume: (e.jPlayer.options.volume * 100),
-				progress: (e.jPlayer.status.currentPercentAbsolute)
+				progress: (e.jPlayer.status.currentPercentAbsolute),
+				leftTime: this.formatTime(duration * (1 - e.jPlayer.status.currentPercentAbsolute / 100))
 			});
 		})
 	},
@@ -58,8 +68,8 @@ let Player = React.createClass({
                 		<h2 className="music-title">{this.props.currentMusicItem.title}</h2>
                 		<h3 className="music-artist mt10">{this.props.currentMusicItem.artist}</h3>
                 		<div className="row mt20">
-                			<div className="left-time -col-auto">-2:00</div>
-                			<div className="volume-container">
+                			<div className="left-time -col-auto">-{this.state.leftTime}</div>
+                			<div className="volume-container" style={{marginLeft: '5px'}}>
                 				<i className="icon-volume rt" style={{top: 5, left: -5}}></i>
                 				<div className="volume-wrapper">
 					                <Progress
